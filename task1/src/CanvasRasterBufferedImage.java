@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * trida pro kresleni na platno: vyuzitu tridy RasterBufferedImage
+ * trida pro kresleni na platno: vyuzita tridy RasterBufferedImage
  * 
  * @author PGRF FIM UHK
  * @version 2020
@@ -79,12 +79,14 @@ public class CanvasRasterBufferedImage {
 			public void componentResized(ComponentEvent e) {
 				if (panel.getWidth()<1 || panel.getHeight()<1)
 					return;
-				if (panel.getWidth()<=raster.getWidth() && panel.getHeight()<=raster.getHeight()) //no resize if new is smaller
+				if (panel.getWidth()<=raster.getWidth() && panel.getHeight()<=raster.getHeight()) //no resize if new one is smaller
 					return;
 				RasterBufferedImage newRaster = new RasterBufferedImage(panel.getWidth(), panel.getHeight());
 
 				newRaster.draw(raster);
 				raster = newRaster;
+				rasterizer = new LineRasterizerGraphics(raster);
+
 			}
 		});
 
