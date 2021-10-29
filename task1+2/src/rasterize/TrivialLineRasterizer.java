@@ -12,11 +12,27 @@ public class TrivialLineRasterizer extends LineRasterizer {
         float q = y1 - k * x1;
 
         if (k<1 && k>-1) {
+            if(x2<x1) {
+                int t = x1;
+                x1 = x2;
+                x2 = t;
+                t = y1;
+                y1 = y2;
+                y2 = t;
+            }
         for (int x = x1; x <= x2; x++) {
             float y = k * x + q;
             raster.setPixel(x, Math.round(y), color);
             }
         } else {
+            if(y2<y1) {
+                int t = x1;
+                x1 = x2;
+                x2 = t;
+                t = y1;
+                y1 = y2;
+                y2 = t;
+            }
             for (int y = y1; y<=y2; y++) {
                 float x = (y - q) / k;
                 raster.setPixel(Math.round(x), y, color);
