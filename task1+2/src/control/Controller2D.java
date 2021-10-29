@@ -1,26 +1,41 @@
 package control;
 
+import fill.SeedFill;
 import rasterize.*;
 import view.Panel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class Controller2D implements Controller {
 
     private final Panel panel;
 
+    private final Raster raster;
+
+    private LineRasterizer trivialLineRasterizer;
+    private SeedFill seedFiller;
+
     private int x,y;
-    private LineRasterizerGraphics rasterizer;
 
     public Controller2D(Panel panel) {
         this.panel = panel;
+        this.raster = panel.getRaster();
         initObjects(panel.getRaster());
         initListeners(panel);
     }
 
     public void initObjects(Raster raster) {
-        rasterizer = new LineRasterizerGraphics(raster);
+        trivialLineRasterizer = new TrivialLineRasterizer(raster);
+
+        Polygon polygon = new Polygon();
+
+        seedFiller = new SeedFill(raster);
+     }
+
+     public void changeRasterizer(LineRasterizer rasterizer) {
+        this.trivialLineRasterizer = rasterizer;
      }
 
     @Override
@@ -34,7 +49,6 @@ public class Controller2D implements Controller {
                 if (e.isShiftDown()) {
                     //TODO
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
-                    rasterizer.drawLine(x,y,e.getX(),e.getY());
                     x = e.getX();
                     y = e.getY();
                 } else if (SwingUtilities.isMiddleMouseButton(e)) {
@@ -50,7 +64,10 @@ public class Controller2D implements Controller {
                     if (SwingUtilities.isLeftMouseButton(e)) {
                         //TODO
                     } else if (SwingUtilities.isRightMouseButton(e)) {
-                        //TODO
+                        seedFiller.setSeed(new model.Point(e.getX(),e.getY()));
+                        seedFiller.setFillColor(Color.YELLOW.getRGB());
+                        seedFiller.fill();
+
                     }
                 }
             }
@@ -64,7 +81,8 @@ public class Controller2D implements Controller {
                 if (e.isShiftDown()) {
                     //TODO
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
-                    //TODO
+                    raster.clear();
+                    trivialLineRasterizer.rasterize(x,y,e.getX(),e.getY(), 0xffffff);
                 } else if (SwingUtilities.isRightMouseButton(e)) {
                     //TODO
                 } else if (SwingUtilities.isMiddleMouseButton(e)) {
@@ -101,6 +119,10 @@ public class Controller2D implements Controller {
 
     private void hardClear() {
         panel.clear();
+    }
+
+    public Raster getRaster() {
+        return raster;
     }
 
 }
