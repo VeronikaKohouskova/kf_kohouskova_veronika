@@ -27,7 +27,7 @@ public class Controller2D implements Controller {
     }
 
     public void initObjects(Raster raster) {
-        trivialLineRasterizer = new TrivialLineRasterizer(raster);
+        trivialLineRasterizer = new FilledLineRasterizer(raster);
 
         Polygon polygon = new Polygon();
 

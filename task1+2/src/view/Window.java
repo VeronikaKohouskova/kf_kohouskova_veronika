@@ -3,8 +3,7 @@ package view;
 import control.Controller2D;
 import rasterize.DashAndDotLineRasterizer;
 import rasterize.DottedLineRasterizer;
-import rasterize.PolygonRasterizer;
-import rasterize.TrivialLineRasterizer;
+import rasterize.FilledLineRasterizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,7 @@ public class Window extends JFrame {
         rButton.setText("Trivial line");
         rButton.setBackground(Color.LIGHT_GRAY);
         rButton.addActionListener(l -> {
-            controller.changeRasterizer(new TrivialLineRasterizer(controller.getRaster()));
+            controller.changeRasterizer(new FilledLineRasterizer(controller.getRaster()));
         });
         JRadioButton rButton2 = new JRadioButton();
         rButton2.setText("Dotted line");
