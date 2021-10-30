@@ -15,8 +15,8 @@ public class SeedFill implements Filler {
     }
 
     public void setSeed(Point seed) {
-        seedX = seed.x;
-        seedY = seed.y;
+        seedX = seed.getX();
+        seedY = seed.getY();
         backgroudColor = raster.getPixel(seedX, seedY);
     }
 

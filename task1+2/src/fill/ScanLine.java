@@ -27,7 +27,7 @@ public class ScanLine implements Filler {
     public void fill() {
         List<Edge> edges = new ArrayList<>();
 
-        int minY = points.get(0).y;
+        int minY = points.get(0).getY();
         int maxY = minY;
 
         for (int y = minY; y<= maxY; y++) {

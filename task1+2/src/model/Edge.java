@@ -1,17 +1,22 @@
 package model;
 
 public class Edge {
-    private int x1, y1, x2, y2;
+    private Point p1, p2;
 
     public boolean isHorizontal() {
-        return false;
+        return p1.getY() == p2.getY();
     }
 
     public void orientate() {
+        if(p1.getY() > p2.getY()) {
+            Point t = p1;
+            p1 = p2;
+            p2 = t;
+        }
     }
 
     public boolean hasIntersection(int y) {
-        return false;
+        return y < p2.getY() && y >= p1.getY();
     }
 
     public int getIntersection(int y) {
@@ -19,13 +24,13 @@ public class Edge {
     }
 
     public boolean isInside(Point p) {
-        Point t = new Point(x2 - x1, y2 - y1);
+        Point t = new Point(p2.getX() - p1.getX(), p2.getY() - p1.getY());
 
 
-        Point n = new Point(t.y, -t.x);
-        Point v = new Point(p.x - x1, p.y - y1);
+        Point n = new Point(t.getY(), -t.getX());
+        Point v = new Point(p.getX() - p1.getX(), p.getY() - p1.getY());
 
-        return v.x * n.x + v.y * n.y < 0;
+        return v.getX() * n.getX() + v.getY() * n.getY() < 0;
     }
 
     public Point getIntersection(Point p3, Point p4) {
