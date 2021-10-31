@@ -24,7 +24,15 @@ public class DashAndDotLineRasterizer extends LineRasterizer {
         dy = y2 - y1;
         if (dy<0) {
             do {
-                raster.setPixel(x1, y1, 0xff00ff);
+                if(a < 5 || a >= 15 && a <= 30) {
+                    a++;
+                    raster.setPixel(x1, y1, 0xff00ff);
+
+                }else if (a < 15 || a < 40 && a > 30) {
+                    a++;
+                } else {
+                    a=0;
+                }
                 if (err > 0) {
                     x1 = x1 + 1;
                     err = err - Math.abs(dy);
@@ -36,7 +44,15 @@ public class DashAndDotLineRasterizer extends LineRasterizer {
 
         } else {
             do {
-                raster.setPixel(x1, y1, 0xff00ff);
+                if(a < 5 || a >= 15 && a <= 30) {
+                    a++;
+                    raster.setPixel(x1, y1, 0xff00ff);
+
+                }else if (a < 15 || a < 40 && a > 30) {
+                    a++;
+                } else {
+                    a=0;
+                }
                 if (err > 0) {
                     x1 = x1 + 1;
                     err = err - dy;
