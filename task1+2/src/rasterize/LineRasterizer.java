@@ -4,7 +4,7 @@ import model.Line;
 
 import java.awt.*;
 
-public abstract class LineRasterizer {
+public abstract class LineRasterizer implements Rasterizer<Line> {
     Raster raster;
     Color color;
 
@@ -24,8 +24,10 @@ public abstract class LineRasterizer {
         rasterize(line.getX1(), line.getY1(), line.getX2(), line.getY2(), line.getColor());
     }
 
-    public void rasterize(int x1, int y1, int x2, int y2, int color) {
-        //TODO
+    public Raster getRaster() {
+        return raster;
     }
+
+    public abstract void rasterize(int x1, int y1, int x2, int y2, int color);
 
 }

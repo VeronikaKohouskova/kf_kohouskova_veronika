@@ -3,6 +3,7 @@ package control;
 import fill.SeedFill;
 import rasterize.*;
 import view.Panel;
+import model.Polygon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +15,13 @@ public class Controller2D implements Controller {
 
     private final Raster raster;
 
-    private LineRasterizer trivialLineRasterizer;
+    private LineRasterizer filledLineRasterizer;
     private SeedFill seedFiller;
 
     private int x,y;
+    private Polygon polygon;
+    private PolygonRasterizer polygonRasterizer;
+    private Rasterizer rasterizer;
 
     public Controller2D(Panel panel) {
         this.panel = panel;
@@ -27,15 +31,15 @@ public class Controller2D implements Controller {
     }
 
     public void initObjects(Raster raster) {
-        trivialLineRasterizer = new FilledLineRasterizer(raster);
-
-        Polygon polygon = new Polygon();
+        filledLineRasterizer = new FilledLineRasterizer(raster);
+        polygon = new Polygon();
+        polygonRasterizer = new PolygonRasterizer();
 
         seedFiller = new SeedFill(raster);
      }
 
-     public void changeRasterizer(LineRasterizer rasterizer) {
-        this.trivialLineRasterizer = rasterizer;
+     public void changeRasterizer(Rasterizer rasterizer) {
+        this.rasterizer = rasterizer;
      }
 
     @Override
@@ -47,14 +51,25 @@ public class Controller2D implements Controller {
                 if (e.isControlDown()) return;
 
                 if (e.isShiftDown()) {
-                    //TODO
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
-                    x = e.getX();
-                    y = e.getY();
+                      if (rasterizer instanceof LineRasterizer) {
+                          x = e.getX();
+                          y = e.getY();
+                      } else if (rasterizer instanceof PolygonRasterizer) {
+
+                          model.Point point = new model.Point(e.getX(), e.getY());
+                          polygon.addPoints(point);
+                    }
+
                 } else if (SwingUtilities.isMiddleMouseButton(e)) {
                     //TODO
                 } else if (SwingUtilities.isRightMouseButton(e)) {
-                    //TODO
+                 if (rasterizer instanceof PolygonRasterizer) {
+                     polygonRasterizer.setLineRasterizer(new FilledLineRasterizer(getRaster()));
+                     changeRasterizer(polygonRasterizer);
+                    ((PolygonRasterizer)rasterizer).rasterize(polygon);
+                    polygon.clearPoints();
+                }
                 }
             }
 
@@ -81,10 +96,16 @@ public class Controller2D implements Controller {
                 if (e.isShiftDown()) {
                     //TODO
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
-                    raster.clear();
-                    trivialLineRasterizer.rasterize(x,y,e.getX(),e.getY(), 0xffffff);
+                    if (rasterizer instanceof LineRasterizer) {
+                        raster.clear();
+                        ((LineRasterizer)rasterizer).rasterize(x,y,e.getX(),e.getY(), 0xffffff);}
+                   else if(rasterizer instanceof PolygonRasterizer) {
+                        polygonRasterizer.setLineRasterizer(new DottedLineRasterizer(getRaster()));
+                        changeRasterizer(polygonRasterizer);
+                        ((PolygonRasterizer)rasterizer).rasterize(polygon);
+                    }
                 } else if (SwingUtilities.isRightMouseButton(e)) {
-                    //TODO
+
                 } else if (SwingUtilities.isMiddleMouseButton(e)) {
                     //TODO
                 }
@@ -97,8 +118,14 @@ public class Controller2D implements Controller {
             public void keyPressed(KeyEvent e) {
                 // na klávesu C vymazat plátno
                 if (e.getKeyCode() == KeyEvent.VK_C) {
-                    //TODO
+                    raster.clear();
+                    polygon.clearPoints();
+                    update();
                 }
+                if (e.getKeyCode() == KeyEvent.VK_T) {
+                    update();
+                }
+
             }
         });
 
