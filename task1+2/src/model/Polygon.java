@@ -24,6 +24,19 @@ public class Polygon {
         this.color = color;
     }
 
+    public List<Line> getLines () {
+        List<Line> lines = new ArrayList<>();
+        for (int i = 0; i <points.size(); i++) {
+            int j = i + 1;
+            if (j == points.size()) {
+                j = 0;
+            }
+            Line l = new Line(points.get(i), points.get(j), this.color);
+            lines.add(l);
+        }
+        return lines;
+    }
+
     public void addPoints(Point... pointsToAdd) { // vararg java
         points.addAll(Arrays.asList(pointsToAdd));
     }
@@ -33,4 +46,7 @@ public class Polygon {
     }
 
 
+    public void clearPoints() {
+        points.clear();
+    }
 }
