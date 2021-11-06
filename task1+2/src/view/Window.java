@@ -2,8 +2,9 @@ package view;
 
 import control.Controller2D;
 import rasterize.DashAndDotLineRasterizer;
-import rasterize.DottedLineRasterizer;
 import rasterize.FilledLineRasterizer;
+import rasterize.DottedLineRasterizer;
+import rasterize.PolygonRasterizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,15 +18,16 @@ public class Window extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("UHK FIM PGRF : " + this.getClass().getName());
 
-
         panel = new Panel();
 
         JRadioButton rButton = new JRadioButton();
-        rButton.setText("Trivial line");
+        rButton.setText("Filled line");
         rButton.setBackground(Color.LIGHT_GRAY);
+        rButton.setSelected(true);
         rButton.addActionListener(l -> {
             controller.changeRasterizer(new FilledLineRasterizer(controller.getRaster()));
         });
+
         JRadioButton rButton2 = new JRadioButton();
         rButton2.setText("Dotted line");
         rButton2.setBackground(Color.LIGHT_GRAY);
@@ -43,19 +45,35 @@ public class Window extends JFrame {
         JRadioButton rButton4 = new JRadioButton();
         rButton4.setText("Polygon");
         rButton4.setBackground(Color.LIGHT_GRAY);
+        rButton4.addActionListener(l -> {
+            PolygonRasterizer polygonRasterizer = new PolygonRasterizer();
+            polygonRasterizer.setLineRasterizer(new DottedLineRasterizer(controller.getRaster()));
+            controller.changeRasterizer(polygonRasterizer);
+        });
 
-        JButton button = new JButton();
-        button.setText("Clear");
+        JRadioButton rButton5 = new JRadioButton();
+        rButton5.setText("Fill");
+        rButton5.setBackground(Color.LIGHT_GRAY);
+        rButton5.addActionListener(l -> {
+        });
 
         JPanel p = new JPanel();
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(rButton);
+        buttonGroup.add(rButton2);
+        buttonGroup.add(rButton3);
+        buttonGroup.add(rButton4);
+        buttonGroup.add(rButton5);
+
         p.setBackground(Color.LIGHT_GRAY);
         p.add(rButton);
         p.add(rButton2);
         p.add(rButton3);
         p.add(rButton4);
-        p.add(button);
+        p.add(rButton5);
         this.add(p, BorderLayout.NORTH);
         this.add(panel, BorderLayout.CENTER);
+
 
         setVisible(true);
         pack();
