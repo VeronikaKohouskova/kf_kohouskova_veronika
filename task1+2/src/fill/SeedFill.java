@@ -3,12 +3,14 @@ package fill;
 import model.Point;
 import rasterize.Raster;
 
-public class SeedFill implements Filler {
+import java.util.ArrayDeque;
+import java.util.Queue;
 
-    private final Raster raster;
-    private int seedX, seedY;
-    private int backgroudColor;
-    private int fillColor;
+public class SeedFill implements Filler {
+    protected final Raster raster;
+    protected int seedX, seedY;
+    protected int backgroundColor;
+    protected int fillColor;
 
     public SeedFill(Raster raster) {
         this.raster = raster;
@@ -17,7 +19,7 @@ public class SeedFill implements Filler {
     public void setSeed(Point seed) {
         seedX = seed.getX();
         seedY = seed.getY();
-        backgroudColor = raster.getPixel(seedX, seedY);
+        backgroundColor = raster.getPixel(seedX, seedY);
     }
 
     public void setFillColor(int fillColor) {
@@ -25,19 +27,32 @@ public class SeedFill implements Filler {
 
     }
 
+    public int getFillColor() {
+        return fillColor;
+    }
+
+    public boolean isValidForFill(Point point){
+        return point.getX() > 0 && point.getY() > 0 && point.getX() < raster.getWidth() && point.getY()
+                < raster.getHeight() && backgroundColor == raster.getPixel(point.getX(), point.getY());
+    }
 
     @Override
     public void fill() {
-    seed(seedX, seedY);
+       Queue<Point> queue  = new ArrayDeque<>();
+        queue.add(new Point(seedX, seedY));
+        seed(queue);
     }
 
-    private void seed(int x, int y) {
-        if(backgroudColor == raster.getPixel(x,y)) {
-       raster.setPixel(x, y, fillColor);
-       seed(x + 1, y);
-       seed(x - 1, y);
-       seed(x, y + 1);
-       seed(x, y - 1);
+    public void seed(Queue<Point> queue) {
+        while (! queue.isEmpty()){
+            Point point = queue.poll();
+            if(isValidForFill(point)) {
+                raster.setPixel(point.getX(), point.getY(), fillColor);
+                queue.add(new Point(point.getX() + 1, point.getY()));
+                queue.add(new Point(point.getX() - 1, point.getY()));
+                queue.add(new Point(point.getX(), point.getY() + 1));
+                queue.add(new Point(point.getX(), point.getY() - 1));
+            }
         }
     }
 }
