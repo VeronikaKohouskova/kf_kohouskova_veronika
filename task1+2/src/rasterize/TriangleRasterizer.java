@@ -8,24 +8,25 @@ public class TriangleRasterizer extends PolygonRasterizer{
 
     public void rasterize (Triangle triangle){
         super.rasterize(triangle);
-        if (triangle.getLines().size()<3){
+        if (triangle.getLines().size()==3 && ! triangle.isFinished()){
             rasterizeCircle(triangle);
         }
     }
 
     public void rasterizeCircle(Triangle triangle) {
         int x = 0;
-        int r = (int) (Math.sqrt(Math.pow((triangle.getY1()-triangle.getX1()),2) + Math.pow((triangle.getY2()-triangle.getX2()),2))/2);
+        int r = (int) (Math.sqrt(Math.pow((triangle.getX2()-triangle.getX1()),2) + Math.pow((triangle.getY2()-triangle.getY1()),2))/2);
         int y = r;
         int dveY = 2*r-1;
         int dveX = 1;
         int err = 0;
+        model.Point center = triangle.getCenter();
 
         while(x<y) {
-            raster.setPixel(triangle.getX1() + x, triangle.getY1() + y, triangle.getColor());
-            raster.setPixel(triangle.getX1() + y, triangle.getY1() - x, triangle.getColor());
-            raster.setPixel(triangle.getX1() - x, triangle.getY1() - y, triangle.getColor());
-            raster.setPixel(triangle.getX1() - y, triangle.getY1() + x, triangle.getColor());
+            raster.setPixel(center.getX() + x, center.getY() + y, triangle.getColor());
+            raster.setPixel(center.getX() + y, center.getY() - x, triangle.getColor());
+            raster.setPixel(center.getX() - x, center.getY() - y, triangle.getColor());
+            raster.setPixel(center.getX() - y, center.getY() + x, triangle.getColor());
             x++;
             err += dveX;
             dveX += 2;
@@ -35,10 +36,10 @@ public class TriangleRasterizer extends PolygonRasterizer{
                 dveY -= 2;
             }
             if (x > y) break;
-            raster.setPixel(triangle.getX1() + y, triangle.getY1() + x, triangle.getColor());
-            raster.setPixel(triangle.getX1() + x, triangle.getY1() - y, triangle.getColor());
-            raster.setPixel(triangle.getX1() - y, triangle.getY1() - x, triangle.getColor());
-            raster.setPixel(triangle.getX1() - x, triangle.getY1() + y, triangle.getColor());
+            raster.setPixel(center.getX() + y, center.getY() + x, triangle.getColor());
+            raster.setPixel(center.getX() + x, center.getY() - y, triangle.getColor());
+            raster.setPixel(center.getX() - y, center.getY() - x, triangle.getColor());
+            raster.setPixel(center.getX() - x, center.getY() + y, triangle.getColor());
         }
 
     }
