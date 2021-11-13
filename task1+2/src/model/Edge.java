@@ -1,7 +1,10 @@
 package model;
 
-public class Edge {
-    private Point p1, p2;
+public class Edge extends Line{
+
+    public Edge(Point p1, Point p2, int color) {
+        super(p1, p2, color);
+    }
 
     public boolean isHorizontal() {
         return p1.getY() == p2.getY();
@@ -20,7 +23,9 @@ public class Edge {
     }
 
     public int getIntersection(int y) {
-        return 0;
+        float k = (float) (p2.getX() - p1.getX()) / (float) (p2.getY() - p1.getY());
+        float q = (float) p1.getX() - k * (float) p1.getY();
+        return Math.round((int) (k * (float) y + q));
     }
 
     public boolean isInside(Point p) {
