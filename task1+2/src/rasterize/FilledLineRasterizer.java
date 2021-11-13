@@ -13,14 +13,14 @@ public class FilledLineRasterizer extends LineRasterizer {
         dy = y2 - y1;
         x = x1;
         y = y1;
-        p = 2 * dy - dx;
+        p = 2 * dy - dx; // Pro tento algoritmus zavádíme prediktor, který je odvozen z rovnic DDA algoritmu s kontrolou chyby.
         xk1 = 2 * dy;
         xk2 = 2 * (dy - dx);
         yk1 = 2 * dx;
         yk2 = 2 * (dx - dy);
 
-        if (Math.abs(dy) < Math.abs(dx)) {
-            if(x2 < x1) {
+        if (Math.abs(dy) < Math.abs(dx)) { //Řídící osa je x.
+            if(x2 < x1) { // Prohodíme první bod s posledním, pokud je x2 menší.
                 int t = x1;
                 x1 = x2;
                 x2 = t;
@@ -36,18 +36,18 @@ public class FilledLineRasterizer extends LineRasterizer {
                 xk2 = 2 * (dy - dx);
             }
             raster.setPixel(x, y, color);
-            if (y1<y2) {
-                    while (x < x2) {
-                        x = x + 1;
+            if (y1<y2) { // Pokud je y1 menší než y2, tak při posunu po ose y přičítáme.
+                    while (x < x2) { // Provádíme dokud je x menší, protože řídící osa je x.
+                        x = x + 1; // Vždy se posunujeme po ose x. Nezáleží na velikosti prediktoru.
                         if (p < 0) {
-                            p = p + xk1;
+                            p = p + xk1; // Pokud je prediktor menší než nula, přičteme k němu k1.
                         } else {
-                            p = p + xk2;
-                            y = y + 1;
+                            p = p + xk2; // Jinak k prediktoru přičteme k2.
+                            y = y + 1; // Občas se posunujeme i po ose y - pokud není prediktor menší než nula.
                         }
                         raster.setPixel(x, y, color);
                     }
-                } else {
+                } else { // Pokud není y1 menší než y2, tak při posunu po ose y odečítáme.
                 dy = Math.abs(y2 - y1);
                 p = 2 * dy - dx;
                 xk1 = 2 * dy;
@@ -64,7 +64,7 @@ public class FilledLineRasterizer extends LineRasterizer {
                     }
                 }
 
-        } else {
+        } else {  //Řídící osa je y. Postupujeme obdobně jako když je řídící osa x.
             if(y2 < y1) {
                 int t = x1;
                 x1 = x2;
@@ -113,3 +113,9 @@ public class FilledLineRasterizer extends LineRasterizer {
     }
 
 }
+
+/*
+Bresenhamův algoritmus
+Tento algoritmus se dnes používá nejčastěji, protože využívá pouze celočíselnou aritmetiku a obejde se dokonce bez dělení.
+Jeho jedinou nevýhodou je, že má složitější odvození.
+ */
