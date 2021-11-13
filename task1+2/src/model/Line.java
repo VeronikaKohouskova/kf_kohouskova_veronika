@@ -2,7 +2,7 @@ package model;
 
 public class Line {
 
-    private final Point p1, p2;
+    protected Point p1, p2;
     private final int color;
 
     public Line(int x1, int y1, int x2, int y2, int color) {
@@ -38,4 +38,11 @@ public class Line {
         return color;
     }
 
+    public Point getP1() {
+        return p1;
+    }
+
+    public Point getP2() {
+        return p2;
+    }
 }
