@@ -39,7 +39,9 @@ public class Edge extends Line{
     }
 
     public Point getIntersection(Point p3, Point p4) {
-        return new Point(0, 0);
+        int x0 =((p1.getX()*p2.getY()-p2.getX()*p1.getY())*(p3.getX()-p4.getX())-(p3.getX()* p4.getY()- p4.getX()*p3.getY())*(p1.getX()-p2.getX()))/((p1.getX()-p2.getX())* (p3.getY()-p4.getY())-(p1.getY()- p2.getY())*(p3.getX()-p4.getX()));
+        int y0 =((p1.getX()*p2.getY()-p2.getX()*p1.getY())*(p3.getY()-p4.getY())-(p3.getX()*p4.getY()-p4.getX()*p3.getY())*(p1.getY()-p2.getY()))/((p1.getX()-p2.getX())*(p3.getY()-p4.getY())-(p1.getY()-p2.getY())*(p3.getX()-p4.getX()));
+        return new Point(x0, y0);
     }
 
 }
